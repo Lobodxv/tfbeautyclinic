@@ -1,0 +1,228 @@
+﻿// ================================
+// MENU RESPONSIVO
+// ================================
+
+const menuToggle = document.getElementById('menuToggle');
+const navMenu = document.getElementById('navMenu');
+
+if (menuToggle && navMenu) {
+    menuToggle.addEventListener('click', () => {
+        const expanded = navMenu.classList.toggle('active');
+        menuToggle.classList.toggle('active');
+        menuToggle.setAttribute('aria-expanded', String(expanded));
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!event.target.closest('.header') && navMenu.classList.contains('active')) {
+            navMenu.classList.remove('active');
+            menuToggle.classList.remove('active');
+            menuToggle.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && navMenu.classList.contains('active')) {
+            navMenu.classList.remove('active');
+            menuToggle.classList.remove('active');
+            menuToggle.setAttribute('aria-expanded', 'false');
+        }
+    });
+}
+
+// ================================
+// SCROLL SUAVE
+// ================================
+
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', (event) => {
+        const targetId = link.getAttribute('href');
+        if (targetId && targetId !== '#' && document.querySelector(targetId)) {
+            event.preventDefault();
+            document.querySelector(targetId).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+
+// ================================
+// SLIDER ANTES / DEPOIS
+// ================================
+
+document.querySelectorAll('.gallery-comparison').forEach(comparison => {
+    const afterWrapper = comparison.querySelector('.after-wrapper');
+    const divider = comparison.querySelector('.divider');
+    let activePointerId = null;
+
+    if (!afterWrapper || !divider) return;
+
+    // Initialize from data-percent or aria-valuenow attribute
+    const initialPercent = parseFloat(afterWrapper.dataset.percent) || parseFloat(divider.getAttribute('aria-valuenow')) || 50;
+    afterWrapper.style.width = `${initialPercent}%`;
+    divider.style.left = `${initialPercent}%`;
+    divider.setAttribute('aria-valuenow', Math.round(initialPercent));
+
+    const updatePosition = (clientX) => {
+        const rect = comparison.getBoundingClientRect();
+        let x = clientX - rect.left;
+        x = Math.max(0, Math.min(x, rect.width));
+        const percentage = (x / rect.width) * 100;
+        afterWrapper.style.width = `${percentage}%`;
+        divider.style.left = `${percentage}%`;
+        divider.setAttribute('aria-valuenow', Math.round(percentage));
+    };
+
+    divider.addEventListener('pointerdown', (event) => {
+        activePointerId = event.pointerId;
+        divider.setPointerCapture(activePointerId);
+        updatePosition(event.clientX);
+    });
+
+    divider.addEventListener('pointermove', (event) => {
+        if (activePointerId === event.pointerId) {
+            updatePosition(event.clientX);
+        }
+    });
+
+    divider.addEventListener('pointerup', (event) => {
+        if (activePointerId === event.pointerId) {
+            activePointerId = null;
+            try { divider.releasePointerCapture(event.pointerId); } catch (error) {}
+        }
+    });
+
+    divider.addEventListener('pointercancel', () => {
+        activePointerId = null;
+    });
+
+    comparison.addEventListener('pointerdown', (event) => {
+        if (event.target.closest('.divider')) return;
+        updatePosition(event.clientX);
+    });
+
+    divider.addEventListener('keydown', (event) => {
+        const current = parseFloat(afterWrapper.style.width) || 50;
+        const step = 6;
+        let next = current;
+
+        if (event.key === 'ArrowLeft') next = Math.max(0, current - step);
+        if (event.key === 'ArrowRight') next = Math.min(100, current + step);
+        if (event.key === 'Home') next = 0;
+        if (event.key === 'End') next = 100;
+
+        if (next !== current) {
+            event.preventDefault();
+            afterWrapper.style.width = `${next}%`;
+            divider.style.left = `${next}%`;
+            divider.setAttribute('aria-valuenow', Math.round(next));
+        }
+    });
+});
+
+// ================================
+// REVELAÇÃO COM SCROLL
+// ================================
+
+const revealElements = document.querySelectorAll('.about-card, .about-details, .service-card, .experience-card, .gallery-item, .testimonial-card, .contact-details, .contact-form');
+
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            revealObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.18 });
+
+revealElements.forEach(element => {
+    element.classList.add('reveal');
+    revealObserver.observe(element);
+});
+
+// ================================
+// CONTADORES ANIMADOS
+// ================================
+
+const counterItems = document.querySelectorAll('.experience-card strong');
+let counterActivated = false;
+
+const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (!counterActivated && entry.isIntersecting) {
+            counterActivated = true;
+            counterItems.forEach(item => {
+                const rawValue = item.textContent.trim();
+                const value = parseFloat(rawValue.replace('+', '')) || 0;
+                let start = 0;
+                const duration = 1400;
+                const stepTime = Math.max(20, Math.floor(duration / (value || 1)));
+                const hasPlus = rawValue.includes('+');
+
+                const timer = setInterval(() => {
+                    start += 1;
+                    if (start >= value) {
+                        item.textContent = hasPlus ? `${Math.round(value)}+` : value.toString();
+                        clearInterval(timer);
+                        return;
+                    }
+                    item.textContent = hasPlus ? `${start}+` : start.toString();
+                }, stepTime);
+            });
+            counterObserver.disconnect();
+        }
+    });
+}, { threshold: 0.3 });
+
+if (counterItems.length) {
+    counterObserver.observe(counterItems[0]);
+}
+
+// ================================
+// FORMULÁRIO
+// ================================
+
+const contactForm = document.getElementById('contactForm');
+
+if (contactForm) {
+    contactForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const inputs = contactForm.querySelectorAll('input, select, textarea');
+        let valid = true;
+
+        inputs.forEach(field => {
+            if (!field.value.trim()) {
+                valid = false;
+                field.style.borderColor = '#c91e3e';
+            } else {
+                field.style.borderColor = 'rgba(139, 21, 56, 0.15)';
+            }
+        });
+
+        if (valid) {
+            showSuccessMessage();
+            contactForm.reset();
+        }
+    });
+}
+
+function showSuccessMessage() {
+    const alert = document.createElement('div');
+    alert.className = 'success-toast';
+    alert.textContent = 'Mensagem enviada com sucesso! Em breve entraremos em contato.';
+    document.body.appendChild(alert);
+
+    setTimeout(() => {
+        alert.classList.add('visible');
+    }, 30);
+
+    setTimeout(() => {
+        alert.classList.remove('visible');
+        setTimeout(() => alert.remove(), 300);
+    }, 3600);
+}
+
+// ================================
+// EVENTOS ADICIONAIS
+// ================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.body.classList.add('page-loaded');
+});

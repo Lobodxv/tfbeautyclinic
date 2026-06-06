@@ -1,0 +1,332 @@
+﻿/* ================================
+   RESPONSIVE DESIGN
+   ================================ */
+
+@media (max-width: 1080px) {
+    html,
+    body {
+        overflow-x: hidden;
+    }
+
+    .container {
+        padding: 0 22px;
+    }
+
+    .header-grid {
+        grid-template-columns: 1fr auto;
+    }
+
+    .hero-grid,
+    .about-grid,
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero {
+        padding-top: 40px;
+    }
+
+    .section-header {
+        text-align: left;
+    }
+
+    .services-grid,
+    .experience-grid,
+    .gallery-grid,
+    .testimonials-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 860px) {
+    .container {
+        padding: 0 18px;
+    }
+
+    .hero-copy h1 {
+        font-size: 3rem;
+    }
+
+    .hero-grid {
+        gap: 32px;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .meta-item {
+        min-width: 0;
+    }
+
+    .service-card,
+    .testimonial-card,
+    .experience-card,
+    .gallery-item {
+        border-radius: 24px;
+    }
+}
+
+@media (max-width: 720px) {
+    .header {
+        padding: 18px 0;
+    }
+
+    .menu-toggle {
+        display: flex;
+    }
+
+    .nav {
+        position: fixed;
+        inset: 0 auto auto 0;
+        width: min(360px, 90vw);
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px);
+        transform: translateX(-110%);
+        transition: transform 0.35s ease;
+        padding: 120px 24px 24px;
+        z-index: 200;
+        box-shadow: 14px 0 40px rgba(11, 12, 14, 0.12);
+        border-right: 1px solid rgba(139, 21, 56, 0.08);
+    }
+
+    .nav.active {
+        transform: translateX(0);
+    }
+
+    .nav-list {
+        flex-direction: column;
+        gap: 24px;
+        align-items: flex-start;
+    }
+
+    .nav-link {
+        font-size: 1.1rem;
+    }
+
+    .hero-copy {
+        text-align: center;
+    }
+
+    .hero-actions {
+        align-items: center;
+        gap: 14px;
+    }
+
+    .hero-copy,
+    .hero-media,
+    .gallery-item,
+    .testimonial-card,
+    .experience-card,
+    .service-card,
+    .about-card,
+    .about-details,
+    .contact-details,
+    .contact-form,
+    .footer-grid > div {
+        min-width: 0;
+    }
+
+    .footer {
+        padding: 42px 0 26px;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        text-align: center;
+    }
+
+    .footer-grid > div {
+        min-width: 0;
+    }
+
+    .footer-links {
+        justify-content: center;
+        gap: 16px;
+    }
+
+    .footer-links a {
+        flex: 1 1 45%;
+        min-width: 140px;
+        text-align: center;
+    }
+
+    .hero-card {
+        border-radius: 28px;
+    }
+
+    .gallery-grid,
+    .services-grid,
+    .experience-grid,
+    .testimonials-grid {
+        gap: 20px;
+    }
+
+    .about-card,
+    .about-details,
+    .contact-details,
+    .contact-form {
+        padding: 30px;
+    }
+
+    .services-grid,
+    .experience-grid,
+    .gallery-grid,
+    .testimonials-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .gallery-comparison {
+        min-height: 300px;
+    }
+
+    /* Reduce hero image height on small tablets */
+    .hero-card {
+        min-height: 420px;
+    }
+
+    .hero-card img {
+        height: auto;
+        aspect-ratio: auto;
+    }
+}
+
+@media (max-width: 520px) {
+    .container {
+        padding: 0 16px;
+    }
+
+    .header-grid {
+        grid-template-columns: 1fr auto;
+    }
+
+    .footer {
+        padding: 32px 0 20px;
+    }
+
+    .footer-grid {
+        gap: 18px;
+    }
+
+    .footer-links {
+        justify-content: center;
+        gap: 12px;
+    }
+
+    .footer-links a {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+
+    .hero-copy,
+    .hero-media,
+    .gallery-item,
+    .testimonial-card,
+    .experience-card,
+    .service-card,
+    .about-card,
+    .about-details,
+    .contact-details,
+    .contact-form,
+    .footer-grid > div {
+        min-width: 0;
+    }
+
+    .header,
+    .footer,
+    .hero,
+    .gallery,
+    .testimonials,
+    .contact,
+    .faq {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .hero {
+        padding-top: 24px;
+    }
+
+    /* Make hero image more compact on small screens */
+    .hero-card {
+        min-height: 300px;
+    }
+
+    .hero-card img {
+        width: 100%;
+        height: auto;
+        aspect-ratio: auto;
+    }
+
+    /* Switch gallery comparison to stacked images on very small screens */
+    .gallery-comparison {
+        position: relative;
+        min-height: auto;
+        display: block;
+    }
+
+    .gallery-comparison img,
+    .gallery-comparison .after-wrapper img {
+        position: static;
+        inset: auto;
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    .after-wrapper {
+        position: static;
+        width: 100% !important;
+        border-right: none;
+        margin-top: 12px;
+    }
+
+    .divider,
+    .handle,
+    .labels {
+        display: none !important;
+    }
+
+    .hero-copy h1 {
+        font-size: 2.4rem;
+    }
+
+    .hero-text,
+    .section-description,
+    .text-emphasis,
+    .gallery-description,
+    .testimonial-card p,
+    .contact-details p {
+        font-size: 0.95rem;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .hero-meta {
+        justify-content: center;
+    }
+}
+
+@media print {
+    body,
+    .header,
+    .menu-toggle,
+    .whatsapp-float {
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    .nav,
+    .gallery-comparison,
+    .hero-card,
+    .service-card,
+    .testimonial-card,
+    .contact-card {
+        box-shadow: none !important;
+    }
+}
